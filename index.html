@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vaultex — Segurança Digital para PMEs</title>
+  <meta name="description" content="Segurança de nível enterprise para empresas que estão crescendo e têm muito a perder. Diagnóstico gratuito em 24h." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #07090F;
+      --bg-card: #0E1118;
+      --bg-card2: #131720;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.14);
+      --green: #00E5A0;
+      --green-dim: rgba(0,229,160,0.12);
+      --green-glow: rgba(0,229,160,0.25);
+      --text: #F0F2F5;
+      --text-muted: #7A8394;
+      --text-dim: #4A5568;
+      --display: 'Syne', sans-serif;
+      --body: 'Inter', sans-serif;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE TEXTURE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 5%;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7,9,15,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--green);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo-icon svg { width: 18px; height: 18px; }
+
+    .nav-logo-text {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--green);
+      color: #07090F !important;
+      padding: 9px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 600 !important;
+      font-size: 14px !important;
+      transition: opacity 0.2s, transform 0.15s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: rgba(7,9,15,0.97);
+      backdrop-filter: blur(20px);
+      padding: 24px 5% 32px;
+      border-bottom: 1px solid var(--border);
+      z-index: 99;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--text-muted); text-decoration: none; font-size: 16px; font-weight: 500; }
+    .mobile-menu .nav-cta { color: #07090F !important; text-align: center; padding: 12px; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 5% 80px;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(0,229,160,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--green-dim);
+      border: 1px solid rgba(0,229,160,0.2);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(36px, 4.5vw, 58px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--green);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #07090F;
+      border: none;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-hover);
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.25); color: var(--text); transform: translateY(-2px); }
+
+    .hero-trust {
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .hero-trust-avatars {
+      display: flex;
+    }
+
+    .hero-trust-avatars span {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      background: var(--bg-card2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-left: -8px;
+    }
+
+    .hero-trust-avatars span:first-child { margin-left: 0; }
+
+    /* ─── HERO FORM CARD ─── */
+    .hero-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+
+    .form-title {
+      font-family: var(--display);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--body);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus { border-color: rgba(0,229,160,0.4); }
+    .form-group input::placeholder { color: var(--text-dim); }
+
+    .form-submit {
+      width: 100%;
+      background: var(--green);
+      color: #07090F;
+      border: none;
+      padding: 13px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+      font-family: var(--body);
+    }
+
+    .form-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .form-privacy {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    /* ─── STATS BAR ─── */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 5%;
+    }
+
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 8px 24px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: var(--display);
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ─── SECTIONS ─── */
+    section {
+      padding: 100px 5%;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      font-family: var(--display);
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    h2 em { font-style: normal; color: var(--green); }
+
+    .section-lead {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ─── SERVICES ─── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 56px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 28px 32px;
+      transition: border-color 0.25s, transform 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card:hover {
+      border-color: rgba(0,229,160,0.25);
+      transform: translateY(-3px);
+    }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .service-card:hover::after { opacity: 1; }
+
+    .service-icon {
+      width: 44px; height: 44px;
+      background: var(--green-dim);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .service-icon svg { width: 22px; height: 22px; stroke: var(--green); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .service-title {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .service-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      background: var(--green-dim);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ─── DIFFERENTIALS ─── */
+    .diff-section { background: var(--bg-card); }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .diff-list {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .diff-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .diff-num {
+      width: 36px; height: 36px;
+      background: var(--green-dim);
+      border: 1px solid rgba(0,229,160,0.2);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .diff-item-text h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .diff-item-text p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .diff-visual {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+    }
+
+    .diff-visual-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .diff-visual-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    .threat-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .threat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+
+    .threat-left { display: flex; align-items: center; gap: 10px; }
+    .threat-left span { font-size: 13px; color: var(--text-muted); }
+
+    .threat-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .threat-blocked { background: rgba(0,229,160,0.1); color: var(--green); }
+    .threat-low { background: rgba(255,200,0,0.1); color: #FFD60A; }
+    .threat-critical { background: rgba(255,60,60,0.12); color: #FF5757; }
+
+    .threat-dot-green { background: var(--green); }
+    .threat-dot-yellow { background: #FFD60A; }
+    .threat-dot-red { background: #FF5757; }
+
+    /* ─── PROCESS ─── */
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 60px;
+      position: relative;
+    }
+
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.66% + 22px);
+      right: calc(16.66% + 22px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--green), rgba(0,229,160,0.2), var(--green));
+    }
+
+    .process-step {
+      padding: 0 32px;
+      text-align: center;
+    }
+
+    .process-step:first-child { padding-left: 0; text-align: left; }
+    .process-step:last-child { padding-right: 0; text-align: right; }
+
+    .step-circle {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green);
+      margin: 0 auto 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .process-step:first-child .step-circle { margin-left: 0; }
+    .process-step:last-child .step-circle { margin-right: 0; }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 56px;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .testimonial-stars {
+      color: var(--green);
+      font-size: 14px;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--bg-card2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .testimonial-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .testimonial-role {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* ─── CTA FINAL ─── */
+    .cta-section {
+      padding: 100px 5%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-glow {
+      position: absolute;
+      bottom: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(0,229,160,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-inner h2 {
+      margin-bottom: 16px;
+    }
+
+    .cta-inner p {
+      font-size: 17px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 10px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .cta-form input {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 13px 16px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--body);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .cta-form input:focus { border-color: rgba(0,229,160,0.4); }
+    .cta-form input::placeholder { color: var(--text-dim); }
+
+    .cta-note {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 16px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 5%;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text-muted); }
+
+    /* ─── ANIMATIONS ─── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── SUCCESS STATE ─── */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .form-success.show { display: block; }
+    .form-success-icon { font-size: 40px; margin-bottom: 12px; }
+    .form-success h3 { font-family: var(--display); font-size: 20px; color: var(--green); margin-bottom: 8px; }
+    .form-success p { font-size: 14px; color: var(--text-muted); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .diff-grid { grid-template-columns: 1fr; }
+      .diff-visual { order: -1; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-right: 1px solid var(--border); border-top: 1px solid var(--border); }
+      .stat-item:nth-child(4) { border-right: none; border-top: 1px solid var(--border); }
+      .process-steps { grid-template-columns: 1fr; gap: 32px; }
+      .process-steps::before { display: none; }
+      .process-step { text-align: left !important; display: flex; gap: 20px; align-items: flex-start; padding: 0; }
+      .step-circle { margin: 0; flex-shrink: 0; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .cta-form { flex-direction: column; }
+      .hero-form-card { padding: 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      h1 { font-size: 32px; }
+      section { padding: 72px 5%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { opacity: 1; transform: none; transition: none; }
+      .hero-badge-dot { animation: none; }
+    }
+
+    /* ─── CAROUSEL ─── */
+    .carousel-section { padding: 100px 5%; }
+
+    .carousel-wrapper {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      position: relative;
+      aspect-ratio: 16/7;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.65) saturate(0.85);
+      transition: transform 0.6s ease;
+    }
+
+    .carousel-slide.active img { transform: scale(1.03); }
+
+    .carousel-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 48px 36px 28px;
+      background: linear-gradient(to top, rgba(7,9,15,0.92) 0%, transparent 100%);
+    }
+
+    .carousel-caption-tag {
+      display: inline-block;
+      background: var(--green-dim);
+      border: 1px solid rgba(0,229,160,0.25);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .carousel-caption p {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+      max-width: 480px;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(7,9,15,0.7);
+      border: 1px solid var(--border-hover);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+
+    .carousel-btn:hover {
+      background: rgba(0,229,160,0.15);
+      border-color: rgba(0,229,160,0.35);
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .carousel-prev { left: 16px; }
+    .carousel-next { right: 16px; }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 20px;
+      right: 36px;
+      display: flex;
+      gap: 7px;
+      z-index: 10;
+    }
+
+    .carousel-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.25s, width 0.25s, border-radius 0.25s;
+    }
+
+    .carousel-dot.active {
+      background: var(--green);
+      width: 22px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 700px) {
+      .carousel-slide { aspect-ratio: 4/3; }
+      .carousel-caption { padding: 32px 20px 56px; }
+      .carousel-caption p { font-size: 13px; }
+      .carousel-dots { bottom: 14px; right: 20px; }
+      .carousel-btn { width: 36px; height: 36px; }
+      .carousel-prev { left: 10px; }
+      .carousel-next { right: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#" class="nav-logo" aria-label="Vaultex">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#07090F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">Vaultex</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#diferenciais">Diferenciais</a></li>
+      <li><a href="#processo">Como funciona</a></li>
+      <li><a href="#depoimentos">Clientes</a></li>
+      <li><a href="#diagnostico" class="nav-cta">Diagnóstico grátis</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu" role="navigation">
+    <a href="#servicos">Serviços</a>
+    <a href="#diferenciais">Diferenciais</a>
+    <a href="#processo">Como funciona</a>
+    <a href="#depoimentos">Clientes</a>
+    <a href="#diagnostico" class="nav-cta">Diagnóstico grátis</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-glow"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Segurança digital para PMEs
+        </div>
+        <h1>Sua empresa está<br>segura. <em>Tem certeza<br>disso?</em></h1>
+        <p class="hero-sub">A Vaultex protege os dados, sistemas e reputação do seu negócio antes que uma ameaça real aconteça. Segurança de nível enterprise — sem o preço enterprise.</p>
+        <div class="hero-actions">
+          <a href="#diagnostico" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+            Quero meu diagnóstico grátis
+          </a>
+          <a href="#servicos" class="btn-ghost">Ver serviços</a>
+        </div>
+        <div class="hero-trust">
+          <div class="hero-trust-avatars">
+            <span>JM</span><span>PL</span><span>RS</span><span>CA</span>
+          </div>
+          <span>+150 empresas protegidas pela Vaultex</span>
+        </div>
+      </div>
+
+      <!-- FORM CARD -->
+      <div class="hero-form-card" id="diagnostico">
+        <div class="form-success" id="formSuccess">
+          <div class="form-success-icon">🔒</div>
+          <h3>Diagnóstico solicitado!</h3>
+          <p>Nossa equipe entrará em contato em até 24 horas com a análise da sua empresa.</p>
+        </div>
+        <div id="formContent">
+          <p class="form-title">Diagnóstico gratuito</p>
+          <p class="form-sub">Descubra o nível real de segurança da sua empresa. Sem compromisso.</p>
+          <form id="leadForm" novalidate>
+            <div class="form-group">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" name="nome" placeholder="João Silva" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail corporativo</label>
+              <input type="email" id="email" name="email" placeholder="joao@suaempresa.com.br" autocomplete="email" required />
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa</label>
+              <input type="text" id="empresa" name="empresa" placeholder="Nome da sua empresa" required />
+            </div>
+            <div class="form-group">
+              <label for="telefone">WhatsApp <span style="color:var(--text-dim)">(opcional)</span></label>
+              <input type="tel" id="telefone" name="telefone" placeholder="(11) 9 9999-0000" autocomplete="tel" />
+            </div>
+            <button type="submit" class="form-submit">Receber diagnóstico grátis →</button>
+          </form>
+          <p class="form-privacy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Seus dados não serão compartilhados
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item fade-up">
+        <div class="stat-num">+150</div>
+        <div class="stat-label">empresas protegidas</div>
+      </div>
+      <div class="stat-item fade-up fade-up-delay-1">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">clientes que renovam</div>
+      </div>
+      <div class="stat-item fade-up fade-up-delay-2">
+        <div class="stat-num">0</div>
+        <div class="stat-label">incidentes pós-contrato</div>
+      </div>
+      <div class="stat-item fade-up fade-up-delay-3">
+        <div class="stat-num">4h</div>
+        <div class="stat-label">tempo de resposta garantido</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="servicos">
+    <div class="section-inner">
+      <p class="section-eyebrow fade-up">Serviços</p>
+      <h2 class="fade-up">Proteção completa,<br><em>sem complicação</em></h2>
+      <p class="section-lead fade-up">Tudo que sua empresa precisa para estar segura — explicado em português, com plano de ação prático.</p>
+      <div class="services-grid">
+
+        <div class="service-card fade-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <div class="service-title">Pentest e Análise de Vulnerabilidades</div>
+          <p class="service-desc">Simulamos ataques reais para encontrar as brechas antes que hackers encontrem. Entregamos um relatório sem jargão técnico: o que corrigir primeiro, quanto custa e qual o risco de esperar.</p>
+          <span class="service-tag">Relatório em 5 dias úteis</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-delay-1">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="service-title">Monitoramento SOC 24/7</div>
+          <p class="service-desc">Nosso centro de operações monitora sua infraestrutura em tempo real, detectando e respondendo a ameaças antes que causem dano. Você recebe alertas imediatos com contexto e orientação.</p>
+          <span class="service-tag">Resposta garantida em 4h</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-delay-2">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="service-title">Resposta a Incidentes</div>
+          <p class="service-desc">Se algo acontecer, estamos prontos. Contenção rápida, análise forense e plano de recuperação para minimizar o impacto no seu negócio — e evitar que o mesmo incidente se repita.</p>
+          <span class="service-tag">Acionamento imediato</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-delay-3">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="service-title">Conformidade LGPD e ISO 27001</div>
+          <p class="service-desc">Adequamos sua empresa às exigências legais e às melhores práticas internacionais. Evite multas, proteja a credibilidade da sua marca e ganhe vantagem competitiva em licitações e contratos.</p>
+          <span class="service-tag">Sem burocracia desnecessária</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CAROUSEL -->
+  <section class="carousel-section">
+    <div class="section-inner">
+      <p class="section-eyebrow fade-up">Nossa estrutura</p>
+      <h2 class="fade-up">Tecnologia e pessoas<br><em>trabalhando por você</em></h2>
+      <p class="section-lead fade-up" style="margin-bottom: 48px;">Do centro de operações ao atendimento personalizado — conheça como a Vaultex protege as empresas que confiam na gente.</p>
+
+      <div class="carousel-wrapper fade-up">
+        <div class="carousel-track" id="carouselTrack">
+
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900&q=80&auto=format&fit=crop" alt="Centro de operações de segurança com múltiplos monitores" loading="lazy" />
+            <div class="carousel-caption">
+              <span class="carousel-caption-tag">SOC 24/7</span>
+              <p>Centro de Operações de Segurança monitorando ameaças em tempo real</p>
+            </div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=80&auto=format&fit=crop" alt="Sala de servidores com infraestrutura de data center" loading="lazy" />
+            <div class="carousel-caption">
+              <span class="carousel-caption-tag">Infraestrutura</span>
+              <p>Infraestrutura robusta para proteger os dados do seu negócio</p>
+            </div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&q=80&auto=format&fit=crop" alt="Equipe de tecnologia colaborando em escritório moderno" loading="lazy" />
+            <div class="carousel-caption">
+              <span class="carousel-caption-tag">Equipe</span>
+              <p>Especialistas certificados dedicados à segurança da sua empresa</p>
+            </div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=900&q=80&auto=format&fit=crop" alt="Tela com código e análise de segurança digital" loading="lazy" />
+            <div class="carousel-caption">
+              <span class="carousel-caption-tag">Pentest</span>
+              <p>Análise profunda de vulnerabilidades com relatório em português</p>
+            </div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=900&q=80&auto=format&fit=crop" alt="Reunião de consultoria com cliente em ambiente corporativo" loading="lazy" />
+            <div class="carousel-caption">
+              <span class="carousel-caption-tag">Consultoria</span>
+              <p>Atendimento personalizado para cada tamanho e setor de empresa</p>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Slide anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Próximo slide">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="Slides">
+          <button class="carousel-dot active" data-index="0" role="tab" aria-selected="true" aria-label="Slide 1"></button>
+          <button class="carousel-dot" data-index="1" role="tab" aria-selected="false" aria-label="Slide 2"></button>
+          <button class="carousel-dot" data-index="2" role="tab" aria-selected="false" aria-label="Slide 3"></button>
+          <button class="carousel-dot" data-index="3" role="tab" aria-selected="false" aria-label="Slide 4"></button>
+          <button class="carousel-dot" data-index="4" role="tab" aria-selected="false" aria-label="Slide 5"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIFFERENTIALS -->
+  <section class="diff-section" id="diferenciais">
+    <div class="section-inner">
+      <div class="diff-grid">
+        <div>
+          <p class="section-eyebrow fade-up">Por que a Vaultex</p>
+          <h2 class="fade-up">Segurança enterprise<br><em>para quem está crescendo</em></h2>
+          <p class="section-lead fade-up">PMEs são os alvos favoritos dos hackers — exatamente porque estão desprotegidas. A Vaultex é o time de segurança que sua empresa ainda não tem.</p>
+          <div class="diff-list">
+            <div class="diff-item fade-up">
+              <div class="diff-num">1</div>
+              <div class="diff-item-text">
+                <h3>Relatório sem jargão técnico</h3>
+                <p>Você recebe um plano de ação claro: corrija isso primeiro, isso custa X, esse risco pode esperar. Nada de PDF incompreensível que fica na gaveta.</p>
+              </div>
+            </div>
+            <div class="diff-item fade-up fade-up-delay-1">
+              <div class="diff-num">2</div>
+              <div class="diff-item-text">
+                <h3>Resposta garantida em 4 horas</h3>
+                <p>PMEs não podem esperar 2 dias por suporte. Nosso SLA é claro e cumprido — você sempre sabe com quem está falando e em quanto tempo será atendido.</p>
+              </div>
+            </div>
+            <div class="diff-item fade-up fade-up-delay-2">
+              <div class="diff-num">3</div>
+              <div class="diff-item-text">
+                <h3>Planos mensais sem fidelidade mínima</h3>
+                <p>Sem contratos anuais assustadores. Você começa, testa, e fica porque faz sentido — não porque está preso num contrato.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VISUAL: fake SOC monitor -->
+        <div class="diff-visual fade-up">
+          <div class="diff-visual-header">
+            <div class="diff-visual-dot" style="background:#FF5757"></div>
+            <div class="diff-visual-dot" style="background:#FFD60A; margin-left:6px;"></div>
+            <div class="diff-visual-dot" style="background:#00E5A0; margin-left:6px;"></div>
+            <span style="font-size:12px; color:var(--text-dim); margin-left:10px;">Vaultex SOC — Monitor em tempo real</span>
+          </div>
+          <p style="font-size:11px; color:var(--text-dim); margin-bottom:14px; letter-spacing:0.06em; text-transform:uppercase;">Ameaças detectadas hoje</p>
+          <div class="threat-list">
+            <div class="threat-item">
+              <div class="threat-left">
+                <div class="diff-visual-dot threat-dot-green" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+                <span>Tentativa de brute force — SSH</span>
+              </div>
+              <span class="threat-badge threat-blocked">Bloqueado</span>
+            </div>
+            <div class="threat-item">
+              <div class="threat-left">
+                <div class="diff-visual-dot threat-dot-green" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+                <span>Phishing detectado — e-mail corporativo</span>
+              </div>
+              <span class="threat-badge threat-blocked">Bloqueado</span>
+            </div>
+            <div class="threat-item">
+              <div class="threat-left">
+                <div class="diff-visual-dot threat-dot-yellow" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+                <span>Acesso fora do horário — VPN</span>
+              </div>
+              <span class="threat-badge threat-low">Investigando</span>
+            </div>
+            <div class="threat-item">
+              <div class="threat-left">
+                <div class="diff-visual-dot threat-dot-green" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+                <span>Varredura de portas — IP externo</span>
+              </div>
+              <span class="threat-badge threat-blocked">Bloqueado</span>
+            </div>
+            <div class="threat-item">
+              <div class="threat-left">
+                <div class="diff-visual-dot threat-dot-red" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+                <span>Ransomware — endpoint isolado</span>
+              </div>
+              <span class="threat-badge threat-critical">Contido · 7min</span>
+            </div>
+          </div>
+          <div style="margin-top:20px; padding:12px 14px; background:var(--green-dim); border-radius:var(--radius-sm); border: 1px solid rgba(0,229,160,0.15);">
+            <p style="font-size:12px; color:var(--green); font-weight:600;">✓ Todos os incidentes resolvidos em menos de 4 horas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="processo">
+    <div class="section-inner">
+      <p class="section-eyebrow fade-up">Como funciona</p>
+      <h2 class="fade-up">Do diagnóstico à<br><em>proteção contínua</em></h2>
+      <div class="process-steps">
+        <div class="process-step fade-up">
+          <div class="step-circle">1</div>
+          <div>
+            <div class="step-title">Diagnóstico gratuito</div>
+            <p class="step-desc">Você preenche o formulário e nossa equipe realiza uma análise inicial da sua infraestrutura. Sem custo, sem compromisso. Em até 24 horas você já tem um retorno.</p>
+          </div>
+        </div>
+        <div class="process-step fade-up fade-up-delay-1">
+          <div class="step-circle">2</div>
+          <div>
+            <div class="step-title">Plano personalizado</div>
+            <p class="step-desc">Com base no diagnóstico, entregamos um relatório de riscos e um plano de ação sob medida para o tamanho e setor da sua empresa — com prioridades e custos estimados.</p>
+          </div>
+        </div>
+        <div class="process-step fade-up fade-up-delay-2">
+          <div class="step-circle">3</div>
+          <div>
+            <div class="step-title">Proteção contínua</div>
+            <p class="step-desc">Executamos as soluções junto com o seu time e seguimos ao lado com monitoramento e suporte mensal, sem fidelidade mínima. Você fica porque faz sentido.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="depoimentos" style="padding-top:0;">
+    <div class="section-inner">
+      <p class="section-eyebrow fade-up">Clientes</p>
+      <h2 class="fade-up">O que dizem as empresas<br><em>que escolheram a Vaultex</em></h2>
+      <div class="testimonials-grid">
+
+        <div class="testimonial-card fade-up">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Antes da Vaultex, achávamos que estávamos seguros. Após o pentest, encontramos 11 vulnerabilidades críticas. Em 30 dias, todas corrigidas — com explicação que até eu entendi."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JM</div>
+            <div>
+              <div class="testimonial-name">João Mendes</div>
+              <div class="testimonial-role">CTO · FinanTech Soluções</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card fade-up fade-up-delay-1">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"A equipe foi essencial na nossa adequação à LGPD. Processo tranquilo, sem burocracia e com suporte real em cada etapa. Renovamos o contrato sem pensar duas vezes."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="color:#00E5A0;">PL</div>
+            <div>
+              <div class="testimonial-name">Patrícia Lima</div>
+              <div class="testimonial-role">Diretora de TI · Grupo Meridian</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card fade-up fade-up-delay-2">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Sofremos uma tentativa de ataque ransomware. O SOC da Vaultex identificou e bloqueou em menos de 8 minutos. Não perdemos um único arquivo. Isso não tem preço."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="color:#00E5A0;">RS</div>
+            <div>
+              <div class="testimonial-name">Ricardo Souza</div>
+              <div class="testimonial-role">CEO · Logmaster Brasil</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-section">
+    <div class="cta-glow"></div>
+    <div class="cta-inner">
+      <p class="section-eyebrow fade-up">Pronto para começar?</p>
+      <h2 class="fade-up">Não espere um ataque<br>para <em>agir.</em></h2>
+      <p class="fade-up">Solicite seu diagnóstico gratuito e descubra o nível real de segurança da sua empresa — em 24 horas.</p>
+      <form class="cta-form fade-up" id="ctaForm" novalidate>
+        <input type="email" placeholder="Seu e-mail corporativo" required />
+        <button type="submit" class="btn-primary">Quero o diagnóstico →</button>
+      </form>
+      <p class="cta-note fade-up">🔒 Sem spam. Dados protegidos conforme a LGPD.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <a href="#" class="nav-logo" style="margin-bottom:8px; display:inline-flex;">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#07090F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+            </svg>
+          </div>
+          <span class="nav-logo-text">Vaultex</span>
+        </a>
+        <p class="footer-copy">© 2025 Vaultex Segurança Digital · Todos os direitos reservados</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Política de Privacidade</a>
+        <a href="#">Termos de Uso</a>
+        <a href="#diagnostico">Contato</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLOAT -->
+  <a
+    href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20solicitar%20um%20diagnóstico%20gratuito%20para%20minha%20empresa."
+    target="_blank"
+    rel="noopener noreferrer"
+    class="whatsapp-float"
+    aria-label="Falar no WhatsApp"
+  >
+    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+    </svg>
+    <span class="whatsapp-label">Fale conosco</span>
+  </a>
+
+  <style>
+    .whatsapp-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: #fff;
+      text-decoration: none;
+      padding: 13px 20px 13px 16px;
+      border-radius: 50px;
+      box-shadow: 0 4px 24px rgba(37,211,102,0.35);
+      font-family: var(--body);
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: wpp-appear 0.5s 1.2s both;
+    }
+
+    .whatsapp-float:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(37,211,102,0.45);
+    }
+
+    .whatsapp-float:active { transform: scale(0.97); }
+
+    @keyframes wpp-appear {
+      from { opacity: 0; transform: translateY(16px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 480px) {
+      .whatsapp-float { padding: 13px; border-radius: 50%; bottom: 20px; right: 20px; }
+      .whatsapp-label { display: none; }
+    }
+  </style>
+
+  <script>
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Hero form submit
+    document.getElementById('leadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const empresa = document.getElementById('empresa').value.trim();
+      if (!nome || !email || !empresa) return;
+      document.getElementById('formContent').style.display = 'none';
+      document.getElementById('formSuccess').classList.add('show');
+    });
+
+    // CTA form submit
+    document.getElementById('ctaForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type=email]').value.trim();
+      if (!email) return;
+      this.innerHTML = '<p style="color:var(--green); font-weight:600; font-size:15px;">✓ Recebemos seu e-mail! Entraremos em contato em até 24h.</p>';
+    });
+
+    // Smooth close mobile menu on scroll
+    window.addEventListener('scroll', () => {
+      if (mobileMenu.classList.contains('open')) {
+        mobileMenu.classList.remove('open');
+      }
+    }, { passive: true });
+
+    // Carousel
+    (function() {
+      const track = document.getElementById('carouselTrack');
+      const slides = track ? track.querySelectorAll('.carousel-slide') : [];
+      const dots = document.querySelectorAll('.carousel-dot');
+      const prevBtn = document.getElementById('carouselPrev');
+      const nextBtn = document.getElementById('carouselNext');
+      if (!track || slides.length === 0) return;
+
+      let current = 0;
+      let autoTimer = null;
+
+      function goTo(index) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        dots[current].setAttribute('aria-selected', 'false');
+        current = (index + slides.length) % slides.length;
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+        dots[current].setAttribute('aria-selected', 'true');
+      }
+
+      function startAuto() {
+        autoTimer = setInterval(() => goTo(current + 1), 5000);
+      }
+
+      function resetAuto() {
+        clearInterval(autoTimer);
+        startAuto();
+      }
+
+      slides[0].classList.add('active');
+      prevBtn.addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+      nextBtn.addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => { goTo(parseInt(dot.dataset.index)); resetAuto(); });
+      });
+
+      let touchStartX = 0;
+      track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) { goTo(diff > 0 ? current + 1 : current - 1); resetAuto(); }
+      }, { passive: true });
+
+      track.addEventListener('mouseenter', () => clearInterval(autoTimer));
+      track.addEventListener('mouseleave', startAuto);
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) startAuto();
+    })();
+  </script>
+</body>
+</html>
